@@ -1,17 +1,19 @@
 <template>
   <input
     ref="baseInput"
-    :value="value"
+    :value="modelValue"
+    @input="$emit('update:model-value', $event.target.value)"
   >
 </template>
 
 <script>
 export default {
     name: "BaseInput",
-    props: ["value"],
+    props: ["modelValue"],
     updated() {
-        this.$refs.baseInput.focus();
+      this.$refs.baseInput.focus();
     },
+
 };
 </script>
 

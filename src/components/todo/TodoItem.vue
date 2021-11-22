@@ -7,7 +7,7 @@
         type="checkbox"
         @change="toggleStatus"
       >
-      <label @dblclick="editContent">{{ todoContent }}</label>
+      <label @dblclick="editContent">{{ editedContent }}</label>
       <button
         class="destroy"
         @click="deletTodo"
@@ -15,7 +15,7 @@
     </div>
     <base-input
       v-show="isEditing"
-      v-model="content"
+      v-model="editedContent"
       class="edit"
       @blur="updateTodo"
       @keyup.enter="updateTodo($event)"
@@ -31,36 +31,38 @@ const { mapMutations } = createNamespacedHelpers("todo");
 
 import TODO_STATUS from '@/constants/todo/todoStatus';
 
+const props = {
+  todoId: {
+    type: Number,
+    required: true,
+    default: 0,
+  },
+  todoContent: {
+    type: String,
+    default: '',
+  },
+  todoStatus: {
+    validator: function (value) {
+      return TODO_STATUS[value] !== null;
+    },
+    required: true,
+    default: TODO_STATUS.ACTIVE,
+  },
+};
+
 export default {
   name: "TodoItem",
   components: { BaseInput },
   
-  props: {
-    todoId: {
-      type: Number,
-      required: true,
-      default: 0,
-    },
-    todoContent: {
-      type: String,
-      default: '',
-    },
-    todoStatus: {
-      validator: function (value) {
-        return TODO_STATUS[value] !== null;
-      },
-      required: true,
-      default: TODO_STATUS.ACTIVE,
-    },
-    
-  },
+  props,
 
   data() {
     return {
-      content: this.todoContent,
+      editedContent: this.todoContent,
       isEditing: false,
     };
   },
+  
   methods: {
     ...mapMutations(["deleteTodoById", "updateTodoById"]),
 
@@ -72,7 +74,7 @@ export default {
       
       this.updateTodoById({
         id: this.id,
-        content: this.todoContent,
+        content: this.editedContent,
         status: !this.status,
       });
     },
@@ -87,7 +89,7 @@ export default {
       else {
         this.updateTodoById({
           id: this.id,
-          content: this.todoContent,
+          content: this.editedContent,
           status: this.status,
         });
       }

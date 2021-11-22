@@ -21,6 +21,7 @@ const { mapMutations } = createNamespacedHelpers('todo');
 export default {
   name: 'TheHeader',
   components: { BaseInput },
+  
   data(){
     return {
       content: ''
