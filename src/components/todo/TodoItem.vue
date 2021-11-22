@@ -17,7 +17,6 @@
       v-show="isEditing"
       v-model="content"
       class="edit"
-      v-on="$listeners"
       @blur="updateTodo"
       @keyup.enter="updateTodo($event)"
     />

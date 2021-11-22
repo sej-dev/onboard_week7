@@ -8,7 +8,6 @@
       :autofocus="true"
       @blur="addNewTodo" 
       @keyup.enter="addNewTodo" 
-      v-on="$listeners"
     />
   </header>
 </template>
