@@ -6,7 +6,9 @@
     <todo-item 
       v-for="todo in todosFiltered"
       :key="todo.id"
-      v-bind="todo" 
+      :todo-id="todo.id"
+      :todo-content="todo.content"
+      :todo-status="todo.status"
     />
   </ul>
 </template>

@@ -15,7 +15,7 @@
     </div>
     <base-input
       v-show="isEditing"
-      v-model="todoContent"
+      v-model="content"
       class="edit"
       v-on="$listeners"
       @blur="updateTodo"
@@ -37,22 +37,28 @@ export default {
   components: { BaseInput },
   
   props: {
-    // TODO: 명칭변경
-    id: Number,
-    
-    content: String,
-    
-    status: {
+    todoId: {
+      type: Number,
+      required: true,
+      default: 0,
+    },
+    todoContent: {
+      type: String,
+      default: '',
+    },
+    todoStatus: {
       validator: function (value) {
         return TODO_STATUS[value] !== null;
       },
+      required: true,
+      default: TODO_STATUS.ACTIVE,
     },
     
   },
 
   data: function () {
     return {
-      todoContent: this.content,
+      content: this.todoContent,
       isEditing: false,
     };
   },
@@ -64,8 +70,7 @@ export default {
     },
 
     toggleStatus() {
-      this.todoStatus = !this.todoStatus;
-
+      
       this.updateTodoById({
         id: this.id,
         content: this.todoContent,
