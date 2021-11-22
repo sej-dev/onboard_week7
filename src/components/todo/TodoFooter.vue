@@ -38,7 +38,7 @@ import LIST_FILTER from '@/constants/todo/listFilter';
 
 export default {
     name: 'TodoFooter',
-    data: function(){
+    data(){
         return {
           todoStatusFilters : [LIST_FILTER.ALL, LIST_FILTER.ACTIVE, LIST_FILTER.COMPLETED],
         }

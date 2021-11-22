@@ -7,9 +7,7 @@ const completedPredicate = todo => todo.status === TODO_STATUS.COMPLETED;
 
 const state = () => ({
     listFilter: LIST_FILTER.ALL,
-    todos: [
-        
-    ],
+    todos: [],
     _sequence: 0
 });
 
