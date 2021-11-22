@@ -15,7 +15,7 @@
           :class="{ selected : statusFilter === selectedStatusFilter }" 
           @click.prevent="changeListFilter(statusFilter)"
         >
-          {{ statusFilter | toFirstCharUpperOnWord }}
+          {{ statusFilter }}
         </a>
       </li>
     </ul>

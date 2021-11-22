@@ -1,19 +1,13 @@
-import Vue from 'vue'
-import Vuex from 'vuex'
-import App from './App.vue'
-import store from "@/store";
-import * as filters from "@/utils/filters";
+import { createApp } from 'vue'
+import store from '@/store';
 
-Vue.config.productionTip = false
+import App from './App.vue';
 
-Vue.use(Vuex)
+const app = createApp(App);
 
-Object.keys(filters).forEach(key => Vue.filter(key, filters[key]));
+app.use(store);
 
-new Vue({
-  render: h => h(App),
-  store,
-}).$mount('#app')
+app.mount('#app');
 
-require('@/assets/css/index.css')
-require('@/assets/css/base.css')
+require('@/assets/css/index.css');
+require('@/assets/css/base.css');
