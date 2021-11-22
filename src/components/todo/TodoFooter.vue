@@ -15,7 +15,7 @@
           :class="{ selected : filter === curFilter }" 
           @click.prevent="changeListFilter(filter)"
         >
-          {{ filter | mapFirstCharUpper }}
+          {{ filter | toFirstCharUpperOnWord }}
         </a>
       </li>
     </ul>
