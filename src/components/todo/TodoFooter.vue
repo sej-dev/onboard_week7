@@ -7,15 +7,15 @@
 
     <ul class="filters">
       <li
-        v-for="filter in filters"
-        :key="filter"
+        v-for="statusFilter in todoStatusFilters"
+        :key="statusFilter"
       >
         <a
           href="#" 
-          :class="{ selected : filter === curFilter }" 
-          @click.prevent="changeListFilter(filter)"
+          :class="{ selected : statusFilter === selectedStatusFilter }" 
+          @click.prevent="changeListFilter(statusFilter)"
         >
-          {{ filter | toFirstCharUpperOnWord }}
+          {{ statusFilter | toFirstCharUpperOnWord }}
         </a>
       </li>
     </ul>
@@ -40,12 +40,12 @@ export default {
     name: 'TodoFooter',
     data: function(){
         return {
-            filters: [LIST_FILTER.ALL, LIST_FILTER.ACTIVE, LIST_FILTER.COMPLETED],
+          todoStatusFilters : [LIST_FILTER.ALL, LIST_FILTER.ACTIVE, LIST_FILTER.COMPLETED],
         }
     },
     computed: {
         ...mapState({
-            curFilter: state => state.listFilter,
+            selectedStatusFilter : state => state.listFilter,
         }),
         ...mapGetters(['hasTodos', 'getTodosCountByFilter']),
 
