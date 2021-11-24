@@ -3,7 +3,7 @@
     v-show="hasTodos"
     class="footer"
   >
-    <span class="todo-count"> {{ activeTodoCount }} {{ activeTodoCount === 1 ? 'items' : 'item' }} left </span>
+    <span class="todo-count"> {{ activeTodoCount }} {{ activeTodoCount === 1 ? 'item' : 'items' }} left </span>
 
     <ul class="filters">
       <li
@@ -15,7 +15,7 @@
           :class="{ selected : statusFilter === selectedStatusFilter }" 
           @click.prevent="changeListFilter(statusFilter)"
         >
-          {{ statusFilter }}
+          {{ toFirstCharUpperOnWord(statusFilter) }}
         </a>
       </li>
     </ul>
@@ -31,34 +31,43 @@
 </template>
 
 <script>
-import { createNamespacedHelpers } from 'vuex';
-const { mapState, mapGetters, mapMutations } = createNamespacedHelpers('todo');
+import { computed } from 'vue';
+import { useStore } from 'vuex';
 
-import LIST_FILTER from '@/constants/todo/listFilter';
+import * as todoTypes from '@/store/modules/todo/mutation-types';
+import TODO_STATUS_FILTER from '@/constants/todo/todoStatusFilter';
+import toFirstCharUpperOnWord from '@/utils/toFirstCharUpperOnWord';
 
 export default {
     name: 'TodoFooter',
-    data(){
-        return {
-          todoStatusFilters : [LIST_FILTER.ALL, LIST_FILTER.ACTIVE, LIST_FILTER.COMPLETED],
-        }
-    },
-    computed: {
-        ...mapState({
-            selectedStatusFilter : state => state.listFilter,
-        }),
-        ...mapGetters(['hasTodos', 'getTodosCountByFilter']),
+    setup(){
+      
+      const store = useStore();
 
-        activeTodoCount(){
-          return this.getTodosCountByFilter(LIST_FILTER.ACTIVE);
-        },
-        hasCompletedTodo(){
-            return this.getTodosCountByFilter(LIST_FILTER.COMPLETED) > 0;
-        }
+      const selectedStatusFilter = computed( () => store.state.todo.todoStatusFilter );
+      const hasTodos = computed( () => store.getters['todo/hasTodos'] );
+      const getTodosCountByStatusFilter = store.getters['todo/getTodosCountByStatusFilter'];
+    
+      const activeTodoCount = computed( () => getTodosCountByStatusFilter(TODO_STATUS_FILTER.ACTIVE) );
+      const hasCompletedTodo = computed( () => getTodosCountByStatusFilter(TODO_STATUS_FILTER.COMPLETED) > 0 );
+
+      const todoStatusFilters = [TODO_STATUS_FILTER.ALL, TODO_STATUS_FILTER.ACTIVE, TODO_STATUS_FILTER.COMPLETED];
+      
+      return {
+        todoStatusFilters,
+        
+        selectedStatusFilter,
+        
+        hasTodos,
+        activeTodoCount,
+        hasCompletedTodo,
+        
+        deleteAllCompletedTodos: () => store.commit(`todo/${todoTypes.DELETE_ALL_COMPLETED_TODOS}`),
+        changeListFilter: (statusFilter) => store.commit(`todo/${todoTypes.CHANGE_LIST_FILTER}`, statusFilter),
+
+        toFirstCharUpperOnWord
+      }
     },
-    methods: {
-        ...mapMutations(['deleteAllCompletedTodos', 'changeListFilter']),
-    }
 };
 </script>
 

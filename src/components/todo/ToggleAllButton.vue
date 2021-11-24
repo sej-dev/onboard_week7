@@ -12,23 +12,32 @@
 </template>
 
 <script>
-import { createNamespacedHelpers } from 'vuex';
-const { mapGetters, mapMutations } = createNamespacedHelpers('todo');
 
-import LIST_FILTER from '@/constants/todo/listFilter';
+import { computed } from 'vue';
+import { useStore } from 'vuex'
+
+import TODO_STATUS_FILTER from '@/constants/todo/todoStatusFilter';
+import * as todoTypes from '@/store/modules/todo/mutation-types';
 
 export default {
-    name: 'ToggleAllButton',
-    computed: {
-        ...mapGetters(['hasTodos', 'getTodosCountByFilter']),
-        
-        isAllTodoCompleted(){
-            return this.getTodosCountByFilter(LIST_FILTER.ALL) === this.getTodosCountByFilter(LIST_FILTER.COMPLETED);
-        }
-    },
-    methods: {
-        ...mapMutations(['toggleAllTodosStatus'])
+  name: 'ToggleAllButton',
+
+  setup () {
+
+    const store = useStore();
+    
+    const hasTodos = computed( () => store.getters['todo/hasTodos'] );
+    const isAllTodoCompleted = computed( () => {
+      const getTodosCountByStatusFilter = store.getters['todo/getTodosCountByStatusFilter'];
+      return getTodosCountByStatusFilter(TODO_STATUS_FILTER.ALL) === getTodosCountByStatusFilter(TODO_STATUS_FILTER.COMPLETED)
+    } );
+
+    return {
+      hasTodos,
+      isAllTodoCompleted,
+      toggleAllTodosStatus: () => store.commit(`todo/${todoTypes.TOGGLE_ALL_TODOS_STATUS}`),
     }
+  }
 }
 </script>
 

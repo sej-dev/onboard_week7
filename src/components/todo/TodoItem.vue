@@ -1,21 +1,21 @@
 <template>
-  <li :class="{ completed: status, editing: isEditing }">
+  <li :class="{ completed: props.todoStatus, editing: state.isEditing }">
     <div class="view">
       <input
-        :checked="status"
+        :checked="props.todoStatus"
         class="toggle"
         type="checkbox"
         @change="toggleStatus"
       >
-      <label @dblclick="editContent">{{ editedContent }}</label>
+      <label @dblclick="editContent">{{ state.editedContent }}</label>
       <button
         class="destroy"
-        @click="deletTodo"
+        @click="deleteTodo"
       />
     </div>
     <base-input
-      v-show="isEditing"
-      v-model="editedContent"
+      v-show="state.isEditing"
+      v-model="state.editedContent"
       class="edit"
       @blur="updateTodo"
       @keyup.enter="updateTodo($event)"
@@ -24,12 +24,13 @@
 </template>
 
 <script>
+import { reactive } from 'vue';
+import { useStore } from 'vuex';
+
 import BaseInput from '@/components/base/BaseInput.vue';
 
-import { createNamespacedHelpers } from 'vuex';
-const { mapMutations } = createNamespacedHelpers("todo");
-
 import TODO_STATUS from '@/constants/todo/todoStatus';
+import * as todoTypes from '@/store/modules/todo/mutation-types'
 
 const props = {
   todoId: {
@@ -53,53 +54,51 @@ const props = {
 export default {
   name: "TodoItem",
   components: { BaseInput },
-  
   props,
+  setup(props){
 
-  data() {
-    return {
-      editedContent: this.todoContent,
+    const state = reactive({
+      editedContent: props.todoContent,
       isEditing: false,
-    };
-  },
-  
-  methods: {
-    ...mapMutations(["deleteTodoById", "updateTodoById"]),
+    });
+    
+    const store = useStore();
+    
+    const deleteTodo = () => store.commit(`todo/${todoTypes.DELETE_TODO_BY_ID}`, props.todoId);
+    const updateTodoById = (payload) => store.commit(`todo/${todoTypes.UPDATE_TODO_BY_ID}`, payload);
 
-    editContent() {
-      this.isEditing = true;
-    },
+    return {
+      state, 
+      props,
 
-    toggleStatus() {
+      editContent: () => state.isEditing = true,
       
-      this.updateTodoById({
-        id: this.id,
-        content: this.editedContent,
-        status: !this.status,
-      });
-    },
-
-    updateTodo() {
+      toggleStatus: () => updateTodoById({
+        id: props.todoId,
+        content: state.editedContent,
+        status: !props.todoStatus
+      }),
       
-      if(this.isEditing === false) return;
+      updateTodo: () => {
+        if(state.isEditing === false) return;
  
-      if(this.todoContent === ''){
-        this.deletTodo();
-      } 
-      else {
-        this.updateTodoById({
-          id: this.id,
-          content: this.editedContent,
-          status: this.status,
-        });
-      }
+        if(state.editedContent === ''){
+          deleteTodo();
+        } 
+        else {
+          updateTodoById({
+            id: props.todoId,
+            content: state.editedContent,
+            status: props.todoStatus,
+          });
+        }
 
-      this.isEditing = false;
-    },
-
-    deletTodo() {
-      this.deleteTodoById(this.id);
-    },
+        state.isEditing = false;
+      },
+      
+      deleteTodo
+      
+    }
   },
 };
 </script>

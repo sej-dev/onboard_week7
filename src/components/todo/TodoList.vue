@@ -16,22 +16,29 @@
 <script>
 import TodoItem from '@/components/todo/TodoItem.vue';
 
-import { createNamespacedHelpers } from 'vuex';
-const { mapState, mapGetters } = createNamespacedHelpers('todo');
+import { computed } from 'vue';
+import { useStore } from 'vuex'
 
 export default {
-    name: 'TodoList',
-    components: { TodoItem },
-    computed: {
-        ...mapState({
-            curFilter: state => state.listFilter,
-        }),
-        ...mapGetters(['hasTodos', 'getTodosByFilter']),
+  name: 'TodoList',
+  components: { TodoItem },
+  
+  setup () {
+    const store = useStore();
 
-        todosFiltered(){
-          return this.getTodosByFilter(this.curFilter);
-        }
-    },
+    const todosFiltered = computed( () => {
+      const curTodoStatusFilter = store.state.todo.todoStatusFilter;
+      const getTodosByStatusFilter = store.getters['todo/getTodosByStatusFilter'];
+      
+      return getTodosByStatusFilter(curTodoStatusFilter);
+    } );
+    const hasTodos = computed( () => store.getters['todo/hasTodos'] );
+
+    return {
+      hasTodos,
+      todosFiltered
+    }
+  }
 }
 </script>
 

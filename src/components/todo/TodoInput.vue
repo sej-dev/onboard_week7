@@ -13,32 +13,36 @@
 </template>
 
 <script>
+
+import { ref } from 'vue';
+import { useStore } from 'vuex';
+
 import BaseInput from '@/components/base/BaseInput.vue';
 
-import { createNamespacedHelpers } from 'vuex'
-const { mapMutations } = createNamespacedHelpers('todo');
+import * as todoTypes from '@/store/modules/todo/mutation-types'
 
 export default {
   name: 'TheHeader',
   components: { BaseInput },
-  
-  data(){
+
+  setup(){
+
+    const content = ref('');
+
+    const store = useStore();
+
     return {
-      content: ''
+      content,
+
+      addNewTodo(){
+        if(content.value === '') return;
+
+        store.commit(`todo/${todoTypes.ADD_TODO}`, content.value);
+
+        content.value = '';
+      }
     }
   },
-  methods: {
-    ...mapMutations(['addTodo']),
-    
-    addNewTodo(){
-      
-      if(this.content === '') return;
-
-      this.addTodo(this.content);
-
-      this.content = '';
-    }
-  }
 };
 </script>
 
