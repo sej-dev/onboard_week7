@@ -1,10 +1,10 @@
 import getters from "@/store/modules/todo/getters";
 import mutations from "@/store/modules/todo/mutations"
 
-import LIST_FILTER from "@/constants/todo/listFilter";
+import TODO_STATUS_FILTER from "@/constants/todo/todoStatusFilter";
 
 const state = () => ({
-    listFilter: LIST_FILTER.ALL,
+    todoStatusFilter: TODO_STATUS_FILTER.ALL,
     todos: [],
     _sequence: 0
 });

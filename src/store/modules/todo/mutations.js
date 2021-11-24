@@ -1,5 +1,7 @@
 import * as types from "@/store/modules/todo/mutation-types";
 
+import TODO_STATUS from "@/constants/todo/todoStatus";
+
 const activePredicate = todo => todo.status === TODO_STATUS.ACTIVE;
 const completedPredicate = todo => todo.status === TODO_STATUS.COMPLETED;
 
@@ -46,7 +48,7 @@ const mutations = {
     },
 
     [types.CHANGE_LIST_FILTER](state, payload){
-        state.listFilter = payload;
+        state.todoStatusFilter = payload;
     }
 };
 
