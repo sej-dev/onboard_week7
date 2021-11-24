@@ -3,11 +3,11 @@ import store from '@/store';
 
 import App from './App.vue';
 
-const app = createApp(App);
 
-app.use(store);
 
-app.mount('#app');
+createApp(App)
+    .use(store)
+    .mount('#app');
 
 require('@/assets/css/index.css');
 require('@/assets/css/base.css');
