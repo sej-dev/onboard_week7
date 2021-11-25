@@ -2,7 +2,7 @@
   <header class="header">
     <h1>todos</h1>
     <base-input
-      v-model="content"
+      v-model.trim="content"
       class="new-todo"
       placeholder="What needs to be done?"
       :autofocus="true"
@@ -31,16 +31,20 @@ export default {
 
     const store = useStore();
 
-    return {
-      content,
-
-      addNewTodo(){
-        if(content.value === '') return;
+    const addNewTodo = () => {
+      if(content.value === '') return;
 
         store.commit(`todo/${todoTypes.ADD_TODO}`, content.value);
 
         content.value = '';
-      }
+    }
+
+    return {
+      //data
+      content,
+
+      //method
+      addNewTodo
     }
   },
 };

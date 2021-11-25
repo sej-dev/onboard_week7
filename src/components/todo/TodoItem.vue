@@ -15,7 +15,7 @@
     </div>
     <base-input
       v-show="state.isEditing"
-      v-model="state.editedContent"
+      v-model.trim="state.editedContent"
       class="edit"
       @blur="updateTodo"
       @keyup.enter="updateTodo($event)"
@@ -67,35 +67,38 @@ export default {
     const deleteTodo = () => store.commit(`todo/${todoTypes.DELETE_TODO_BY_ID}`, props.todoId);
     const updateTodoById = (payload) => store.commit(`todo/${todoTypes.UPDATE_TODO_BY_ID}`, payload);
 
+    const editContent = () => state.isEditing = true;
+      
+    const toggleStatus = () => updateTodoById({
+      id: props.todoId,
+      content: state.editedContent,
+      status: !props.todoStatus
+    });
+    
+    const updateTodo = () => {
+      if(state.isEditing === false) return;
+
+      if(state.editedContent === ''){
+        deleteTodo();
+      } 
+      else {
+        updateTodoById({
+          id: props.todoId,
+          content: state.editedContent,
+          status: props.todoStatus,
+        });
+      }
+
+      state.isEditing = false;
+    };
+
     return {
       state, 
       props,
 
-      editContent: () => state.isEditing = true,
-      
-      toggleStatus: () => updateTodoById({
-        id: props.todoId,
-        content: state.editedContent,
-        status: !props.todoStatus
-      }),
-      
-      updateTodo: () => {
-        if(state.isEditing === false) return;
- 
-        if(state.editedContent === ''){
-          deleteTodo();
-        } 
-        else {
-          updateTodoById({
-            id: props.todoId,
-            content: state.editedContent,
-            status: props.todoStatus,
-          });
-        }
-
-        state.isEditing = false;
-      },
-      
+      editContent,
+      toggleStatus,
+      updateTodo,
       deleteTodo
       
     }

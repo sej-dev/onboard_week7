@@ -26,15 +26,16 @@ export default {
   setup () {
     const store = useStore();
 
+    const hasTodos = computed( () => store.getters['todo/hasTodos'] );
     const todosFiltered = computed( () => {
       const curTodoStatusFilter = store.state.todo.todoStatusFilter;
       const getTodosByStatusFilter = store.getters['todo/getTodosByStatusFilter'];
       
       return getTodosByStatusFilter(curTodoStatusFilter);
     } );
-    const hasTodos = computed( () => store.getters['todo/hasTodos'] );
-
+    
     return {
+      //store state
       hasTodos,
       todosFiltered
     }

@@ -45,25 +45,32 @@ export default {
       const store = useStore();
 
       const selectedStatusFilter = computed( () => store.state.todo.todoStatusFilter );
+
       const hasTodos = computed( () => store.getters['todo/hasTodos'] );
+
       const getTodosCountByStatusFilter = store.getters['todo/getTodosCountByStatusFilter'];
-    
       const activeTodoCount = computed( () => getTodosCountByStatusFilter(TODO_STATUS_FILTER.ACTIVE) );
       const hasCompletedTodo = computed( () => getTodosCountByStatusFilter(TODO_STATUS_FILTER.COMPLETED) > 0 );
+
+      const deleteAllCompletedTodos = () => store.commit(`todo/${todoTypes.DELETE_ALL_COMPLETED_TODOS}`);
+      const changeListFilter = (statusFilter) => store.commit(`todo/${todoTypes.CHANGE_LIST_FILTER}`, statusFilter);
 
       const todoStatusFilters = [TODO_STATUS_FILTER.ALL, TODO_STATUS_FILTER.ACTIVE, TODO_STATUS_FILTER.COMPLETED];
       
       return {
+        //data
         todoStatusFilters,
         
+        //store state
         selectedStatusFilter,
         
         hasTodos,
         activeTodoCount,
         hasCompletedTodo,
         
-        deleteAllCompletedTodos: () => store.commit(`todo/${todoTypes.DELETE_ALL_COMPLETED_TODOS}`),
-        changeListFilter: (statusFilter) => store.commit(`todo/${todoTypes.CHANGE_LIST_FILTER}`, statusFilter),
+        //method
+        deleteAllCompletedTodos,
+        changeListFilter,
 
         toFirstCharUpperOnWord
       }

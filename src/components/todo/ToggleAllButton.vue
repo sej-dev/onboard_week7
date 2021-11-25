@@ -31,11 +31,15 @@ export default {
       const getTodosCountByStatusFilter = store.getters['todo/getTodosCountByStatusFilter'];
       return getTodosCountByStatusFilter(TODO_STATUS_FILTER.ALL) === getTodosCountByStatusFilter(TODO_STATUS_FILTER.COMPLETED)
     } );
+    const toggleAllTodosStatus = () => store.commit(`todo/${todoTypes.TOGGLE_ALL_TODOS_STATUS}`);
 
     return {
+      //store state
       hasTodos,
       isAllTodoCompleted,
-      toggleAllTodosStatus: () => store.commit(`todo/${todoTypes.TOGGLE_ALL_TODOS_STATUS}`),
+
+      //method
+      toggleAllTodosStatus,
     }
   }
 }
