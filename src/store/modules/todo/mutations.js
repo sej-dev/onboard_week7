@@ -1,9 +1,7 @@
 import * as types from "@/store/modules/todo/mutation-types";
 
 import TODO_STATUS from "@/constants/todo/todoStatus";
-
-const activePredicate = todo => todo.status === TODO_STATUS.ACTIVE;
-const completedPredicate = todo => todo.status === TODO_STATUS.COMPLETED;
+import { activePredicate, completedPredicate } from "@/store/modules/todo/utils/predicates";
 
 // 동기 처리
 const mutations = {
